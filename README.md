@@ -34,6 +34,14 @@ The project explores the practical implementation of **Depth-First Search (DFS)*
 
 The game uses vanilla JavaScript without external frameworks or game engines.
 
+## Gameplay Preview
+
+A preview of Race Maze, featuring procedurally
+generated circuits, customizable vehicles,
+and coin collection.
+
+<img width="542" height="388" alt="image" src="https://github.com/user-attachments/assets/cee669ab-b78a-4160-bd50-bcdff575f95a" />
+
 ## Features
 
 - **Procedural Maze Generation:** Randomly generated circuits using DFS.
