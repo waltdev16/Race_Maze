@@ -1,93 +1,939 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#0b1220"><title>RACE MAZE | Pixel Circuit</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#155f2f;color:#fff;font-family:system-ui,Arial,sans-serif;overflow-x:hidden}button{font:inherit;cursor:pointer;touch-action:manipulation}#wrap{max-width:1400px;margin:auto;min-height:100dvh;display:flex;flex-direction:column;background:#207e40}header{background:#0b1220;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:12px;padding:12px 18px;min-height:75px}h1{font-weight:1000;font-size:clamp(19px,3vw,30px);letter-spacing:1px;margin:0;color:#f3f4f5;text-shadow:3px 3px #1d273c}.mid{text-align:center;font-weight:900;color:#ffcb46;font-size:clamp(14px,2vw,21px)}.clock{text-align:right;font-weight:850;font-size:clamp(13px,2vw,20px)}#status{text-align:center;background:#0b1220;color:#ff9ca8;font-weight:700;font-size:13px;padding:0 8px 10px;min-height:28px}.stage{position:relative;flex:1;min-height:350px;padding:13px 17px 8px;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(to bottom,#227c41 0 22px,#1b7238 22px 44px)}canvas{display:block;width:100%;max-height:68vh;aspect-ratio:1100/640;object-fit:contain;image-rendering:pixelated}.overlay{position:absolute;inset:8px;display:flex;align-items:center;justify-content:center;background:#0009;z-index:3}.hidden{display:none!important}.panel{width:min(92%,660px);background:#0b1220;border:3px solid #f4f4f4;border-radius:14px;box-shadow:7px 7px #0007;text-align:center;padding:28px 20px}.panel h2{font-weight:1000;letter-spacing:1px;font-size:clamp(25px,4vw,42px);margin:0 0 20px;text-shadow:3px 3px #263552}.panel .lead{font-weight:900;font-size:clamp(19px,3vw,28px);margin:0 0 16px}.panel p{font-size:clamp(14px,2.2vw,19px);margin:0 0 20px}.panel button,.action{border:2px solid #ffcf4c;background:#192840;color:#ffcf4c;border-radius:9px;padding:11px 18px;font-weight:900}.panel button:active,.action:active,.dpad button:active{background:#ffcf4c;color:#0b1220}#toast{position:absolute;z-index:2;top:8px;left:50%;transform:translateX(-50%);background:#0b1220;color:#ffcb46;border:2px solid #ffcb46;border-radius:7px;padding:7px 16px;font-size:clamp(12px,2vw,17px);font-weight:950;white-space:nowrap;max-width:95%;overflow:hidden;text-overflow:ellipsis;pointer-events:none}footer{background:#207e40;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 16px 12px}.actions{display:flex;gap:8px}.actions button{font-size:13px;padding:8px 11px}#touch{display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 14px 12px;background:#176637}.dpad{display:grid;grid-template-columns:repeat(3,57px);grid-template-rows:repeat(2,52px);gap:5px}.dpad button{border:2px solid #dfe7ed;background:#102035;color:white;border-radius:9px;font-size:25px;font-weight:bold;user-select:none;-webkit-user-select:none;touch-action:none}.dpad .up{grid-column:2}.dpad .left{grid-column:1;grid-row:2}.dpad .down{grid-column:2;grid-row:2}.dpad .right{grid-column:3;grid-row:2}#help{position:fixed;right:15px;bottom:15px;z-index:10}#helpBox{position:fixed;z-index:11;right:15px;bottom:64px;width:min(330px,92vw);padding:18px;background:#0b1220;border:2px solid #ffcb46;border-radius:10px;box-shadow:0 5px 30px #000a;font-size:14px;line-height:1.7}#helpBox strong{color:#ffcb46}#helpBox button{float:right;background:transparent;color:white;border:0;font-size:20px}@media(min-width:900px) and (pointer:fine){#touch{display:none}canvas{max-height:76vh}}@media(max-width:550px){header{padding:12px 10px;gap:5px;min-height:60px}header h1{font-size:17px}.mid,.clock{font-size:12px}.stage{padding:5px;min-height:280px}canvas{max-height:50vh}footer{padding:5px 9px}.actions button{padding:7px;font-size:12px}.panel{padding:22px 12px}#status{font-size:11px}}
+<html lang="es">
+ <!-- Race Maze: estructura HTML + estilos CSS + lógica JavaScript -->
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" name="viewport"/>
+  <meta content="#0b1220" name="theme-color"/>
+  <title>
+   RACE MAZE | Pixel Circuit
+  </title>
+  <style>
+   
+    * {
+      box-sizing:border-box
+    }
 
-.garage-cars{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px auto}
-.car-option{background:#192a3c;border:2px solid #526577;border-radius:10px;color:#dce8f2;padding:5px 2px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px}
-.car-option.selected{border-color:#ffcb46;color:#ffcb46}
-.car-option canvas{width:42px;height:63px;image-rendering:pixelated}
-.garage-team{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#1a2b41;border:2px solid #4e637c;border-radius:10px;padding:7px 10px;margin:8px auto 13px}
-.garage-team button{min-width:42px;padding:6px;font-size:22px}
-.garage-team-inner{display:flex;align-items:center;gap:12px;font-weight:900}
-#garagePreview{width:41px;height:61px;image-rendering:pixelated}
-.garage-keys{font-size:12px!important;color:#b7c5d7;margin:5px 0!important}
-#overlay .panel{width:min(94%,760px);max-height:94%;overflow-y:auto}
-@media(max-width:550px){.car-option{font-size:9px}.car-option canvas{width:30px;height:45px}.garage-cars{gap:4px}.garage-team-inner{font-size:13px;gap:5px}#garagePreview{width:32px;height:48px}.garage-keys{font-size:10px!important}#overlay .panel{padding:12px 10px}.panel h2{margin:0 0 7px}.panel .lead{margin:0 0 7px}}
-</style></head><body><main id="wrap"><header><h1>RACE MAZE</h1><div class="mid" id="level">NIVEL 1</div><div class="clock" id="time">TIEMPO 00:00</div></header><div id="status">META BLOQUEADA - RECOGE MONEDAS</div><section class="stage"><canvas id="game" width="1100" height="640" aria-label="Laberinto de carreras, generado aleatoriamente"></canvas><div id="toast" class="hidden"></div><div id="overlay" class="overlay"><div class="panel"><h2 id="panelTitle">RACE MAZE</h2><div class="lead" id="panelLead">¡ENCIENDE EL MOTOR!</div><p id="panelText">Elige tu coche y escudería para entrar al circuito.</p><div id="garageOptions"><div id="garageCars" class="garage-cars"></div><div class="garage-team"><button id="prevTeam" type="button" aria-label="Color anterior">‹</button><div class="garage-team-inner"><canvas id="garagePreview" width="40" height="60"></canvas><span id="garageTeamName">FERRARI</span></div><button id="nextTeam" type="button" aria-label="Siguiente color">›</button></div><p class="garage-keys">↑ ↓ COCHE · ← → COLOR</p></div><button id="play">INICIAR</button></div></div></section><footer><div class="actions"><button class="action" id="hint">RUTA: OFF</button><button class="action" id="pause">PAUSA</button><button class="action" id="restart">REINICIAR</button></div><span style="font-size:12px;opacity:.8">PIXEL CIRCUIT</span></footer><div id="touch"><div class="dpad"><button class="up" data-dx="0" data-dy="-1" aria-label="Arriba">▲</button><button class="left" data-dx="-1" data-dy="0" aria-label="Izquierda">◀</button><button class="down" data-dx="0" data-dy="1" aria-label="Abajo">▼</button><button class="right" data-dx="1" data-dy="0" aria-label="Derecha">▶</button></div></div></main><button id="help" class="action" aria-label="Ayuda">?</button><aside id="helpBox" class="hidden"><button id="closeHelp">×</button><strong>CONTROLES</strong><div>iPad: utiliza las flechas táctiles.</div><div>Teclado: flechas o WASD para conducir.</div><div>H: mostrar ruta a la moneda cercana.</div><div>P: pausar. R: reiniciar.</div><div>F11: pantalla completa (computadora).</div><div>Reúne todas las monedas para abrir la meta.</div></aside>
-<script>
-'use strict';
-// Lógica del proyecto Python adaptada a JavaScript para funcionar en Safari/iPad.
-const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
-const C={grass:'#1d783a',asphalt:'#353a42',path:'#555b63',tire:'#101620',rim:'#43546e',shine:'#7b90aa',red:'#e33144',white:'#f4f4f4',gold:'#ffc83b',navy:'#0b1220',green:'#3ce67c'};
-const MODELS=['SPRINT','TURBO GT','HYPER','FORMULA'];
-const TEAMS=[['Ferrari','#dc241f','#9c1815','#ffd74c'],['McLaren','#ff8000','#c45300','#55c9ff'],['Mercedes','#b9bfc8','#7b818a','#27f4d2'],['Red Bull','#223c7e','#162756','#ffc836'],['Aston Martin','#006e5b','#004a3d','#a0ffc5'],['Alpine','#0081ff','#0056aa','#ff5ab4'],['Williams','#006cff','#0046ad','#89e4ff'],['Haas','#e1e3e6','#a8acb0','#de2833'],['Kick Sauber','#2dbd3d','#1c7e27','#a0ff57'],['Racing Bulls','#ecf3fc','#aab4c2','#2360ff'],['Cadillac','#1e2025','#0a0d13','#dab86c'],['Audi','#cf192a','#7f101e','#f87a82']];
-let selectedCar=0,selectedTeam=0;
-const G={level:1,state:'menu',grid:[],cols:0,rows:0,coins:new Set(),total:0,taken:0,start:[1,1],goal:[1,1],pos:[1,1],facing:[0,-1],hint:false,time:0,stamp:performance.now(),noticeTimer:0};
-const id=(x,y)=>x+','+y,un=id=>id.split(',').map(Number),rnd=n=>Math.floor(Math.random()*n),neighbors=[[1,0],[-1,0],[0,1],[0,-1]];
-function generate(cols,rows){const g=Array.from({length:rows},()=>Array(cols).fill(1)),stack=[[1,rows-2]];g[rows-2][1]=0;while(stack.length){const [x,y]=stack[stack.length-1],opts=[];for(const [dx,dy] of neighbors){const nx=x+dx*2,ny=y+dy*2;if(nx>0&&ny>0&&nx<cols-1&&ny<rows-1&&g[ny][nx]===1)opts.push([nx,ny,dx,dy]);}if(opts.length){const [nx,ny,dx,dy]=opts[rnd(opts.length)];g[y+dy][x+dx]=0;g[ny][nx]=0;stack.push([nx,ny]);}else stack.pop();}return g;}
-function pathTo(a,b){const queue=[a],prev=new Map([[id(...a),null]]);for(let index=0;index<queue.length;index++){const p=queue[index],k=id(...p);if(k===id(...b)){let out=[],v=k;while(v!==null){out.push(un(v));v=prev.get(v);}return out.reverse();}for(const [dx,dy] of neighbors){const nx=p[0]+dx,ny=p[1]+dy,q=id(nx,ny);if(nx>=0&&ny>=0&&nx<G.cols&&ny<G.rows&&G.grid[ny][nx]===0&&!prev.has(q)){prev.set(q,k);queue.push([nx,ny]);}}}return [];}
-function init(){G.cols=Math.min(35,21+Math.floor((G.level-1)/2)*2);G.rows=Math.min(23,15+Math.floor((G.level-1)/3)*2);G.grid=generate(G.cols,G.rows);G.start=[1,G.rows-2];G.pos=[...G.start];G.facing=[0,-1];let edge=[];for(let y=1;y<G.rows-1;y++)for(let x=1;x<G.cols-1;x++){if(G.grid[y][x]!==0)continue;if(x!==1&&y!==1&&x!==G.cols-2&&y!==G.rows-2)continue;const p=pathTo(G.start,[x,y]);if(p.length>=15&&id(x,y)!==id(...G.start))edge.push({p:[x,y],d:p.length});}edge.sort((a,b)=>b.d-a.d);G.goal=[...(edge.length?edge[rnd(Math.min(12,edge.length))].p:[G.cols-2,1])];
-const route=pathTo(G.start,G.goal),direct=new Set(route.map(c=>id(...c)));let choices=[];for(let y=1;y<G.rows-1;y++)for(let x=1;x<G.cols-1;x++){if(G.grid[y][x]!==0||direct.has(id(x,y)))continue;const p=pathTo([x,y],G.goal);const fromRoute=route.reduce((m,c)=>Math.min(m,Math.abs(c[0]-x)+Math.abs(c[1]-y)),100);if(fromRoute<=5)choices.push({p:[x,y],score:fromRoute+Math.random()*8+(p.length>10?1:0)});}choices.sort((a,b)=>b.score-a.score);G.total=Math.min(3+Math.floor((G.level-1)/3),7);G.coins=new Set();for(let sep of [7,4,2,0])for(const o of choices){if(G.coins.size>=G.total)break;if([...G.coins].every(k=>{const [x,y]=un(k);return Math.abs(x-o.p[0])+Math.abs(y-o.p[1])>=sep;}))G.coins.add(id(...o.p));}if(G.coins.size<G.total)for(const c of route.slice(2,-2)){if(G.coins.size>=G.total)break;G.coins.add(id(...c));}G.total=G.coins.size;G.taken=0;G.hint=false;G.time=0;G.stamp=performance.now();$('level').textContent='NIVEL '+G.level;updateStatus();$('hint').textContent='RUTA: OFF';}
-function updateStatus(){$('status').textContent=G.coins.size?'META BLOQUEADA - RECOGE MONEDAS':'SALIDA ABIERTA';$('status').style.color=G.coins.size?'#ff9ca8':'#3ce67c';}
-function toast(s){$('toast').textContent=s;$('toast').classList.remove('hidden');clearTimeout(G.noticeTimer);G.noticeTimer=setTimeout(()=>$('toast').classList.add('hidden'),2100);}
-function move(dx,dy){if(G.state!=='playing')return;const x=G.pos[0]+dx,y=G.pos[1]+dy;if(x<0||y<0||x>=G.cols||y>=G.rows||G.grid[y][x])return;G.pos=[x,y];G.facing=[dx,dy];let k=id(x,y);if(G.coins.has(k)){G.coins.delete(k);G.taken++;toast('MONEDA '+G.taken+'/'+G.total);updateStatus();if(!G.coins.size)setTimeout(()=>toast('¡SALIDA ABIERTA!'),400);}if(id(...G.pos)===id(...G.goal)){if(G.coins.size)toast('FALTAN '+G.coins.size+' MONEDAS');else {G.state='victory';showModal('NIVEL COMPLETADO','¡CIRCUITO SUPERADO!','Tiempo: '+formatTime(G.time),'SIGUIENTE NIVEL');}}}
-function formatTime(t){const secs=Math.floor(t);return String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0');}
-function showModal(title,lead,desc,button){$('garageOptions').classList.add('hidden');$('panelTitle').textContent=title;$('panelLead').textContent=lead;$('panelText').textContent=desc;$('play').textContent=button;$('overlay').classList.remove('hidden');}
-function start(){if(G.state==='victory'){G.level++;init();}G.state='playing';G.stamp=performance.now();$('overlay').classList.add('hidden');}
-function togglePause(){if(G.state==='playing'){G.state='paused';showModal('PAUSA','CARRERA DETENIDA','El cronómetro está pausado.','CONTINUAR');}else if(G.state==='paused')start();}
-function draw(){const w=1100,h=640;ctx.fillStyle=C.grass;ctx.fillRect(0,0,w,h);ctx.fillStyle=C.navy;ctx.fillRect(0,0,w,0);round(22,13,1056,613,30,'#f0f0f0');round(29,20,1042,599,24,C.asphalt);ctx.fillStyle='#d1d7dc';for(let x=52;x<1050;x+=75){ctx.fillRect(x,41,37,3);ctx.fillRect(x,590,37,3);}
-const cell=Math.min(28,Math.floor(870/G.cols),Math.floor(510/G.rows));const ox=Math.round((w-G.cols*cell)/2),oy=Math.round((h-G.rows*cell)/2);ctx.fillStyle='#242830';ctx.fillRect(ox+5,oy+5,G.cols*cell,G.rows*cell);ctx.fillStyle=C.asphalt;ctx.fillRect(ox,oy,G.cols*cell,G.rows*cell);
-for(let y=0;y<G.rows;y++)for(let x=0;x<G.cols;x++){const px=ox+x*cell,py=oy+y*cell;if(G.grid[y][x]===0){ctx.fillStyle=C.path;ctx.fillRect(px,py,cell,cell);continue;}
-// Barrera continua, bordes rojos/blancos y neumático pixel art modular.
-ctx.fillStyle='#19212c';ctx.fillRect(px,py,cell,cell);for(const [dx,dy] of neighbors){const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<G.cols&&ny<G.rows&&G.grid[ny][nx]===0){ctx.fillStyle=((x+y)&1)?'#ef4057':'#f1f1f1';if(dx===1)ctx.fillRect(px+cell-3,py,3,cell);if(dx===-1)ctx.fillRect(px,py,3,cell);if(dy===1)ctx.fillRect(px,py+cell-3,cell,3);if(dy===-1)ctx.fillRect(px,py,cell,3);}}tire(px+2,py+2,cell-4);}
-if(G.hint){const dest=G.coins.size?[...G.coins].map(un).sort((a,b)=>pathTo(G.pos,a).length-pathTo(G.pos,b).length)[0]:G.goal;for(const [x,y] of pathTo(G.pos,dest).slice(1,-1)){ctx.fillStyle='#57d3ff';ctx.fillRect(ox+x*cell+cell*.39,oy+y*cell+cell*.39,Math.max(4,cell*.23),Math.max(4,cell*.23));}}
-const [gx,gy]=G.goal;for(let a=0;a<6;a++)for(let b=0;b<6;b++){ctx.fillStyle=(a+b)%2?'#111821':(G.coins.size?'#999da5':'#f9f9f9');ctx.fillRect(ox+(gx+b/6)*cell,oy+(gy+a/6)*cell,cell/6+1,cell/6+1);}if(G.coins.size){ctx.fillStyle='#e53949';ctx.fillRect(ox+gx*cell+cell*.35,oy+gy*cell+cell*.36,cell*.3,cell*.3);}
-for(const k of G.coins){const [x,y]=un(k);const cx=ox+(x+.5)*cell,cy=oy+(y+.5)*cell;ctx.fillStyle='#a26610';ctx.fillRect(cx-cell*.27,cy-cell*.23,cell*.58,cell*.55);ctx.fillStyle='#ffcb3b';ctx.fillRect(cx-cell*.27,cy-cell*.30,cell*.52,cell*.52);ctx.fillStyle='#fff4aa';ctx.fillRect(cx-cell*.14,cy-cell*.2,cell*.13,cell*.13);}
-const [px,py]=G.pos;car(ox+(px+.5)*cell,oy+(py+.5)*cell,cell,G.facing);}
-function round(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
-function tire(x,y,s){const U=s/16;function pix(c,x,y,w,h){ctx.fillStyle=c;ctx.fillRect(Math.round(x*U+ox0),Math.round(y*U+oy0),Math.ceil(w*U),Math.ceil(h*U));}const ox0=x,oy0=y;pix('#0b111b',2,0,12,16);pix('#0b111b',0,3,16,10);pix('#3c4c65',3,2,10,12);pix('#647d9c',4,3,8,3);pix('#192636',5,5,6,6);pix('#8198ae',6,5,4,2);pix('#0c1420',7,7,3,3);pix('#40516a',8,8,1,1);}
+    body {
+      margin:0;
+      background:#155f2f;
+      color:#fff;
+      font-family:system-ui,Arial,sans-serif;
+      overflow-x:hidden
+    }
 
-function pixelCar(c,model,team){
-  const [,body,dark,accent]=TEAMS[team],black='#0d1520',glass='#243b4b',shine='#91c2dd';
-  const b=(color,x,y,w,h)=>{c.fillStyle=color;c.fillRect(x,y,w,h);};
-  c.clearRect(0,0,40,60);
-  if(model===3){
-    b(black,2,14,8,12);b(black,30,14,8,12);b(black,2,41,8,12);b(black,30,41,8,12);
-    b(black,13,2,14,5);b(body,15,3,10,3);b(body,16,8,8,46);b(dark,18,14,4,33);
-    b(body,9,20,22,5);b(body,8,41,24,5);b(glass,15,22,10,14);b(shine,16,23,3,7);
-    b(accent,18,9,4,7);b(accent,16,46,8,3);b(black,3,54,34,5);b(body,6,55,28,2);return;
-  }
-  const left=model===1?5:7,right=40-left;
-  for(const x of [3,32]){b(black,x,15,5,11);b(black,x,38,5,11);}
-  c.fillStyle=black;c.beginPath();c.moveTo(13,2);c.lineTo(27,2);c.lineTo(right,10);c.lineTo(right,49);c.lineTo(28,57);c.lineTo(12,57);c.lineTo(left,49);c.lineTo(left,10);c.closePath();c.fill();
-  c.fillStyle=body;c.beginPath();c.moveTo(14,4);c.lineTo(26,4);c.lineTo(right-2,11);c.lineTo(right-2,48);c.lineTo(27,55);c.lineTo(13,55);c.lineTo(left+2,48);c.lineTo(left+2,11);c.closePath();c.fill();
-  b(glass,11,15,18,13);b(shine,13,16,9,2);b(dark,11,29,18,4);b(glass,12,35,16,7);b(dark,12,44,16,5);
-  b('#fcf6e5',10,10,4,3);b('#fcf6e5',26,10,4,3);b(accent,11,51,5,2);b(accent,24,51,5,2);
-  if(model===0){b(accent,18,5,4,49);b('#ffffff',17,5,1,49);}
-  if(model===1){b(accent,14,5,3,49);b(accent,23,5,3,49);b('#f5f5ee',18,5,4,49);b(black,10,47,20,3);}
-  if(model===2){b(accent,17,5,6,49);b('#f5f5ee',19,5,2,49);b(accent,10,20,2,18);b(accent,28,20,2,18);}
-}
-function paintGarage(){
-  const host=$('garageCars');host.innerHTML='';
-  for(let i=0;i<MODELS.length;i++){
-    const button=document.createElement('button');button.type='button';button.className='car-option'+(i===selectedCar?' selected':'');
-    const preview=document.createElement('canvas');preview.width=40;preview.height=60;
-    pixelCar(preview.getContext('2d'),i,selectedTeam);
-    button.append(preview,document.createTextNode(MODELS[i]));
-    button.onclick=()=>{selectedCar=i;paintGarage();};host.append(button);
-  }
-  pixelCar($('garagePreview').getContext('2d'),selectedCar,selectedTeam);
-  $('garageTeamName').textContent=TEAMS[selectedTeam][0].toUpperCase();
-}
-function changeTeam(step){selectedTeam=(selectedTeam+step+TEAMS.length)%TEAMS.length;paintGarage();}
-$('prevTeam').onclick=()=>changeTeam(-1);
-$('nextTeam').onclick=()=>changeTeam(1);
+    button {
+      font:inherit;
+      cursor:pointer;
+      touch-action:manipulation
+    }
 
-function car(x,y,s,dir){ctx.save();ctx.translate(x,y);ctx.rotate(dir[0]===1?Math.PI/2:dir[0]===-1?-Math.PI/2:dir[1]===1?Math.PI:0);const off=document.createElement('canvas');off.width=40;off.height=60;pixelCar(off.getContext('2d'),selectedCar,selectedTeam);const w=s*.7,h=s*1.05;ctx.imageSmoothingEnabled=false;ctx.drawImage(off,-w/2,-h/2,w,h);ctx.restore();}
-function tick(now){if(G.state==='playing'){G.time+=(now-G.stamp)/1000;}$('time').textContent='TIEMPO '+formatTime(G.time);G.stamp=now;draw();requestAnimationFrame(tick);}
-$('play').onclick=start;$('hint').onclick=()=>{G.hint=!G.hint;$('hint').textContent='RUTA: '+(G.hint?'ON':'OFF');};$('pause').onclick=togglePause;$('restart').onclick=()=>{init();G.state='playing';};$('help').onclick=()=>$('helpBox').classList.toggle('hidden');$('closeHelp').onclick=()=>$('helpBox').classList.add('hidden');
-window.addEventListener('keydown',ev=>{const k=ev.key.toLowerCase();const dirs={arrowup:[0,-1],w:[0,-1],arrowdown:[0,1],s:[0,1],arrowleft:[-1,0],a:[-1,0],arrowright:[1,0],d:[1,0]};if(dirs[k]){ev.preventDefault();if(G.state==='menu'){if(ev.repeat)return;if(k==='arrowup'||k==='w')selectedCar=(selectedCar+MODELS.length-1)%MODELS.length;else if(k==='arrowdown'||k==='s')selectedCar=(selectedCar+1)%MODELS.length;else if(k==='arrowleft'||k==='a')selectedTeam=(selectedTeam+TEAMS.length-1)%TEAMS.length;else selectedTeam=(selectedTeam+1)%TEAMS.length;paintGarage();}else move(...dirs[k]);}if(k==='enter'||k===' '){ev.preventDefault();if(G.state!=='playing')start();}if(k==='h')$('hint').click();if(k==='p')togglePause();if(k==='r')$('restart').click();});
-let hold=null;document.querySelectorAll('[data-dx]').forEach(el=>{const act=()=>move(Number(el.dataset.dx),Number(el.dataset.dy));el.addEventListener('pointerdown',ev=>{ev.preventDefault();act();clearInterval(hold);hold=setInterval(act,125);el.setPointerCapture(ev.pointerId);});for(const e of ['pointerup','pointercancel','lostpointercapture'])el.addEventListener(e,()=>{clearInterval(hold);hold=null;});});
-init();paintGarage();requestAnimationFrame(tick);
-</script></body></html>
+    #wrap {
+      max-width:1400px;
+      margin:auto;
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      background:#207e40
+    }
+
+    header {
+      background:#0b1220;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      align-items:center;
+      gap:12px;
+      padding:12px 18px;
+      min-height:75px
+    }
+
+    h1 {
+      font-weight:1000;
+      font-size:clamp(19px,3vw,30px);
+      letter-spacing:1px;
+      margin:0;
+      color:#f3f4f5;
+      text-shadow:3px 3px #1d273c
+    }
+
+    .mid {
+      text-align:center;
+      font-weight:900;
+      color:#ffcb46;
+      font-size:clamp(14px,2vw,21px)
+    }
+
+    .clock {
+      text-align:right;
+      font-weight:850;
+      font-size:clamp(13px,2vw,20px)
+    }
+
+    #status {
+      text-align:center;
+      background:#0b1220;
+      color:#ff9ca8;
+      font-weight:700;
+      font-size:13px;
+      padding:0 8px 10px;
+      min-height:28px
+    }
+
+    .stage {
+      position:relative;
+      flex:1;
+      min-height:350px;
+      padding:13px 17px 8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:repeating-linear-gradient(to bottom,#227c41 0 22px,#1b7238 22px 44px)
+    }
+
+    canvas {
+      display:block;
+      width:100%;
+      max-height:68vh;
+      aspect-ratio:1100/640;
+      object-fit:contain;
+      image-rendering:pixelated
+    }
+
+    .overlay {
+      position:absolute;
+      inset:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#0009;
+      z-index:3
+    }
+
+    .hidden {
+      display:none!important
+    }
+
+    .panel {
+      width:min(92%,660px);
+      background:#0b1220;
+      border:3px solid #f4f4f4;
+      border-radius:14px;
+      box-shadow:7px 7px #0007;
+      text-align:center;
+      padding:28px 20px
+    }
+
+    .panel h2 {
+      font-weight:1000;
+      letter-spacing:1px;
+      font-size:clamp(25px,4vw,42px);
+      margin:0 0 20px;
+      text-shadow:3px 3px #263552
+    }
+
+    .panel .lead {
+      font-weight:900;
+      font-size:clamp(19px,3vw,28px);
+      margin:0 0 16px
+    }
+
+    .panel p {
+      font-size:clamp(14px,2.2vw,19px);
+      margin:0 0 20px
+    }
+
+    .panel button,.action {
+      border:2px solid #ffcf4c;
+      background:#192840;
+      color:#ffcf4c;
+      border-radius:9px;
+      padding:11px 18px;
+      font-weight:900
+    }
+
+    .panel button:active,.action:active,.dpad button:active {
+      background:#ffcf4c;
+      color:#0b1220
+    }
+
+    #toast {
+      position:absolute;
+      z-index:2;
+      top:8px;
+      left:50%;
+      transform:translateX(-50%);
+      background:#0b1220;
+      color:#ffcb46;
+      border:2px solid #ffcb46;
+      border-radius:7px;
+      padding:7px 16px;
+      font-size:clamp(12px,2vw,17px);
+      font-weight:950;
+      white-space:nowrap;
+      max-width:95%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      pointer-events:none
+    }
+
+    footer {
+      background:#207e40;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:7px 16px 12px
+    }
+
+    .actions {
+      display:flex;
+      gap:8px
+    }
+
+    .actions button {
+      font-size:13px;
+      padding:8px 11px
+    }
+
+    #touch {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding:8px 14px 12px;
+      background:#176637
+    }
+
+    .dpad {
+      display:grid;
+      grid-template-columns:repeat(3,57px);
+      grid-template-rows:repeat(2,52px);
+      gap:5px
+    }
+
+    .dpad button {
+      border:2px solid #dfe7ed;
+      background:#102035;
+      color:white;
+      border-radius:9px;
+      font-size:25px;
+      font-weight:bold;
+      user-select:none;
+      -webkit-user-select:none;
+      touch-action:none
+    }
+
+    .dpad .up {
+      grid-column:2
+    }
+
+    .dpad .left {
+      grid-column:1;
+      grid-row:2
+    }
+
+    .dpad .down {
+      grid-column:2;
+      grid-row:2
+    }
+
+    .dpad .right {
+      grid-column:3;
+      grid-row:2
+    }
+
+    #help {
+      position:fixed;
+      right:15px;
+      bottom:15px;
+      z-index:10
+    }
+
+    #helpBox {
+      position:fixed;
+      z-index:11;
+      right:15px;
+      bottom:64px;
+      width:min(330px,92vw);
+      padding:18px;
+      background:#0b1220;
+      border:2px solid #ffcb46;
+      border-radius:10px;
+      box-shadow:0 5px 30px #000a;
+      font-size:14px;
+      line-height:1.7
+    }
+
+    #helpBox strong {
+      color:#ffcb46
+    }
+
+    #helpBox button {
+      float:right;
+      background:transparent;
+      color:white;
+      border:0;
+      font-size:20px
+    }
+
+    @media(min-width:900px) and (pointer:fine) {
+      #touch {
+        display:none
+      }
+      canvas {
+        max-height:76vh
+      }
+    }
+
+    @media(max-width:550px) {
+      header {
+        padding:12px 10px;
+        gap:5px;
+        min-height:60px
+      }
+      header h1 {
+        font-size:17px
+      }
+      .mid,.clock {
+        font-size:12px
+      }
+      .stage {
+        padding:5px;
+        min-height:280px
+      }
+      canvas {
+        max-height:50vh
+      }
+      footer {
+        padding:5px 9px
+      }
+      .actions button {
+        padding:7px;
+        font-size:12px
+      }
+      .panel {
+        padding:22px 12px
+      }
+      #status {
+        font-size:11px
+      }
+    }
+
+    .garage-cars {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:8px;
+      margin:12px auto
+    }
+
+    .car-option {
+      background:#192a3c;
+      border:2px solid #526577;
+      border-radius:10px;
+      color:#dce8f2;
+      padding:5px 2px;
+      font-size:11px;
+      font-weight:900;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px
+    }
+
+    .car-option.selected {
+      border-color:#ffcb46;
+      color:#ffcb46
+    }
+
+    .car-option canvas {
+      width:42px;
+      height:63px;
+      image-rendering:pixelated
+    }
+
+    .garage-team {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      background:#1a2b41;
+      border:2px solid #4e637c;
+      border-radius:10px;
+      padding:7px 10px;
+      margin:8px auto 13px
+    }
+
+    .garage-team button {
+      min-width:42px;
+      padding:6px;
+      font-size:22px
+    }
+
+    .garage-team-inner {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900
+    }
+
+    #garagePreview {
+      width:41px;
+      height:61px;
+      image-rendering:pixelated
+    }
+
+    .garage-keys {
+      font-size:12px!important;
+      color:#b7c5d7;
+      margin:5px 0!important
+    }
+
+    #overlay .panel {
+      width:min(94%,760px);
+      max-height:94%;
+      overflow-y:auto
+    }
+
+    @media(max-width:550px) {
+      .car-option {
+        font-size:9px
+      }
+      .car-option canvas {
+        width:30px;
+        height:45px
+      }
+      .garage-cars {
+        gap:4px
+      }
+      .garage-team-inner {
+        font-size:13px;
+        gap:5px
+      }
+      #garagePreview {
+        width:32px;
+        height:48px
+      }
+      .garage-keys {
+        font-size:10px!important
+      }
+      #overlay .panel {
+        padding:12px 10px
+      }
+      .panel h2 {
+        margin:0 0 7px
+      }
+      .panel .lead {
+        margin:0 0 7px
+      }
+    }
+  
+  </style>
+ </head>
+ <body>
+  <main id="wrap">
+   <header>
+    <h1>
+     RACE MAZE
+    </h1>
+    <div class="mid" id="level">
+     NIVEL 1
+    </div>
+    <div class="clock" id="time">
+     TIEMPO 00:00
+    </div>
+   </header>
+   <div id="status">
+    META BLOQUEADA - RECOGE MONEDAS
+   </div>
+   <section class="stage">
+    <canvas aria-label="Laberinto de carreras, generado aleatoriamente" height="640" id="game" width="1100">
+    </canvas>
+    <div class="hidden" id="toast">
+    </div>
+    <div class="overlay" id="overlay">
+     <div class="panel">
+      <h2 id="panelTitle">
+       RACE MAZE
+      </h2>
+      <div class="lead" id="panelLead">
+       ¡ENCIENDE EL MOTOR!
+      </div>
+      <p id="panelText">
+       Elige tu coche y escudería para entrar al circuito.
+      </p>
+      <div id="garageOptions">
+       <div class="garage-cars" id="garageCars">
+       </div>
+       <div class="garage-team">
+        <button aria-label="Color anterior" id="prevTeam" type="button">
+         ‹
+        </button>
+        <div class="garage-team-inner">
+         <canvas height="60" id="garagePreview" width="40">
+         </canvas>
+         <span id="garageTeamName">
+          FERRARI
+         </span>
+        </div>
+        <button aria-label="Siguiente color" id="nextTeam" type="button">
+         ›
+        </button>
+       </div>
+       <p class="garage-keys">
+        ↑ ↓ COCHE · ← → COLOR
+       </p>
+      </div>
+      <button id="play">
+       INICIAR
+      </button>
+     </div>
+    </div>
+   </section>
+   <footer>
+    <div class="actions">
+     <button class="action" id="hint">
+      RUTA: OFF
+     </button>
+     <button class="action" id="pause">
+      PAUSA
+     </button>
+     <button class="action" id="restart">
+      REINICIAR
+     </button>
+    </div>
+    <span style="font-size:12px;opacity:.8">
+     PIXEL CIRCUIT
+    </span>
+   </footer>
+   <div id="touch">
+    <div class="dpad">
+     <button aria-label="Arriba" class="up" data-dx="0" data-dy="-1">
+      ▲
+     </button>
+     <button aria-label="Izquierda" class="left" data-dx="-1" data-dy="0">
+      ◀
+     </button>
+     <button aria-label="Abajo" class="down" data-dx="0" data-dy="1">
+      ▼
+     </button>
+     <button aria-label="Derecha" class="right" data-dx="1" data-dy="0">
+      ▶
+     </button>
+    </div>
+   </div>
+  </main>
+  <button aria-label="Ayuda" class="action" id="help">
+   ?
+  </button>
+  <aside class="hidden" id="helpBox">
+   <button id="closeHelp">
+    ×
+   </button>
+   <strong>
+    CONTROLES
+   </strong>
+   <div>
+    iPad: utiliza las flechas táctiles.
+   </div>
+   <div>
+    Teclado: flechas o WASD para conducir.
+   </div>
+   <div>
+    H: mostrar ruta a la moneda cercana.
+   </div>
+   <div>
+    P: pausar. R: reiniciar.
+   </div>
+   <div>
+    F11: pantalla completa (computadora).
+   </div>
+   <div>
+    Reúne todas las monedas para abrir la meta.
+   </div>
+  </aside>
+  <script>
+   
+    'use strict';
+    // Versión web de Race Maze: HTML Canvas y JavaScript sin dependencias.
+    // 1. Referencias a elementos HTML y configuración del lienzo
+    const $ = id => document.getElementById(id), canvas = $('game'), ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+
+    // 2. Colores, modelos y escuderías
+    const C = { grass: '#1d783a', asphalt: '#353a42', path: '#555b63', tire: '#101620', rim: '#43546e', shine: '#7b90aa', red: '#e33144', white: '#f4f4f4', gold: '#ffc83b', navy: '#0b1220', green: '#3ce67c' };
+    const MODELS = ['SPRINT', 'TURBO GT', 'HYPER', 'FORMULA'];
+    const TEAMS = [['Ferrari', '#dc241f', '#9c1815', '#ffd74c'], ['McLaren', '#ff8000', '#c45300', '#55c9ff'], ['Mercedes', '#b9bfc8', '#7b818a', '#27f4d2'], ['Red Bull', '#223c7e', '#162756', '#ffc836'], ['Aston Martin', '#006e5b', '#004a3d', '#a0ffc5'], ['Alpine', '#0081ff', '#0056aa', '#ff5ab4'], ['Williams', '#006cff', '#0046ad', '#89e4ff'], ['Haas', '#e1e3e6', '#a8acb0', '#de2833'], ['Kick Sauber', '#2dbd3d', '#1c7e27', '#a0ff57'], ['Racing Bulls', '#ecf3fc', '#aab4c2', '#2360ff'], ['Cadillac', '#1e2025', '#0a0d13', '#dab86c'], ['Audi', '#cf192a', '#7f101e', '#f87a82']];
+
+    // 3. Selección y estado de la partida
+    let selectedCar = 0, selectedTeam = 0;
+    const G = { level: 1, state: 'menu', grid: [], cols: 0, rows: 0, coins: new Set(), total: 0, taken: 0, start: [1, 1], goal: [1, 1], pos: [1, 1], facing: [0, -1], hint: false, time: 0, stamp: performance.now(), noticeTimer: 0 };
+    const id = (x, y) => x + ',' + y, un = id => id.split(',').map(Number), rnd = n => Math.floor(Math.random() * n), neighbors = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+
+    // 4. DFS: crear un laberinto aleatorio
+    function generate(cols, rows) { const g = Array.from({ length: rows }, () => Array(cols).fill(1)), stack = [[1, rows - 2]]; g[rows - 2][1] = 0; while (stack.length) {
+        const [x, y] = stack[stack.length - 1], opts = [];
+        for (const [dx, dy] of neighbors) {
+            const nx = x + dx * 2, ny = y + dy * 2;
+            if (nx > 0 && ny > 0 && nx < cols - 1 && ny < rows - 1 && g[ny][nx] === 1)
+                opts.push([nx, ny, dx, dy]);
+        }
+        if (opts.length) {
+            const [nx, ny, dx, dy] = opts[rnd(opts.length)];
+            g[y + dy][x + dx] = 0;
+            g[ny][nx] = 0;
+            stack.push([nx, ny]);
+        }
+        else
+            stack.pop();
+    } return g; }
+
+    // 5. BFS: encontrar una ruta corta entre dos celdas
+    function pathTo(a, b) { const queue = [a], prev = new Map([[id(...a), null]]); for (let index = 0; index < queue.length; index++) {
+        const p = queue[index], k = id(...p);
+        if (k === id(...b)) {
+            let out = [], v = k;
+            while (v !== null) {
+                out.push(un(v));
+                v = prev.get(v);
+            }
+            return out.reverse();
+        }
+        for (const [dx, dy] of neighbors) {
+            const nx = p[0] + dx, ny = p[1] + dy, q = id(nx, ny);
+            if (nx >= 0 && ny >= 0 && nx < G.cols && ny < G.rows && G.grid[ny][nx] === 0 && !prev.has(q)) {
+                prev.set(q, k);
+                queue.push([nx, ny]);
+            }
+        }
+    } return []; }
+
+    // 6. Preparar el nivel: dimensiones, salida y monedas
+    function init() {
+        G.cols = Math.min(35, 21 + Math.floor((G.level - 1) / 2) * 2);
+        G.rows = Math.min(23, 15 + Math.floor((G.level - 1) / 3) * 2);
+        G.grid = generate(G.cols, G.rows);
+        G.start = [1, G.rows - 2];
+        G.pos = [...G.start];
+        G.facing = [0, -1];
+        let edge = [];
+        for (let y = 1; y < G.rows - 1; y++)
+            for (let x = 1; x < G.cols - 1; x++) {
+                if (G.grid[y][x] !== 0)
+                    continue;
+                if (x !== 1 && y !== 1 && x !== G.cols - 2 && y !== G.rows - 2)
+                    continue;
+                const p = pathTo(G.start, [x, y]);
+                if (p.length >= 15 && id(x, y) !== id(...G.start))
+                    edge.push({ p: [x, y], d: p.length });
+            }
+        edge.sort((a, b) => b.d - a.d);
+        G.goal = [...(edge.length ? edge[rnd(Math.min(12, edge.length))].p : [G.cols - 2, 1])];
+        const route = pathTo(G.start, G.goal), direct = new Set(route.map(c => id(...c)));
+        let choices = [];
+        for (let y = 1; y < G.rows - 1; y++)
+            for (let x = 1; x < G.cols - 1; x++) {
+                if (G.grid[y][x] !== 0 || direct.has(id(x, y)))
+                    continue;
+                const p = pathTo([x, y], G.goal);
+                const fromRoute = route.reduce((m, c) => Math.min(m, Math.abs(c[0] - x) + Math.abs(c[1] - y)), 100);
+                if (fromRoute <= 5)
+                    choices.push({ p: [x, y], score: fromRoute + Math.random() * 8 + (p.length > 10 ? 1 : 0) });
+            }
+        choices.sort((a, b) => b.score - a.score);
+        G.total = Math.min(3 + Math.floor((G.level - 1) / 3), 7);
+        G.coins = new Set();
+        for (let sep of [7, 4, 2, 0])
+            for (const o of choices) {
+                if (G.coins.size >= G.total)
+                    break;
+                if ([...G.coins].every(k => { const [x, y] = un(k); return Math.abs(x - o.p[0]) + Math.abs(y - o.p[1]) >= sep; }))
+                    G.coins.add(id(...o.p));
+            }
+        if (G.coins.size < G.total)
+            for (const c of route.slice(2, -2)) {
+                if (G.coins.size >= G.total)
+                    break;
+                G.coins.add(id(...c));
+            }
+        G.total = G.coins.size;
+        G.taken = 0;
+        G.hint = false;
+        G.time = 0;
+        G.stamp = performance.now();
+        $('level').textContent = 'NIVEL ' + G.level;
+        updateStatus();
+        $('hint').textContent = 'RUTA: OFF';
+    }
+
+    // 7. Actualizar los mensajes y el estado del juego
+    function updateStatus() { $('status').textContent = G.coins.size ? 'META BLOQUEADA - RECOGE MONEDAS' : 'SALIDA ABIERTA'; $('status').style.color = G.coins.size ? '#ff9ca8' : '#3ce67c'; }
+    function toast(s) { $('toast').textContent = s; $('toast').classList.remove('hidden'); clearTimeout(G.noticeTimer); G.noticeTimer = setTimeout(() => $('toast').classList.add('hidden'), 2100); }
+
+    // 8. Movimiento, colisiones, monedas y victoria
+    function move(dx, dy) { if (G.state !== 'playing')
+        return; const x = G.pos[0] + dx, y = G.pos[1] + dy; if (x < 0 || y < 0 || x >= G.cols || y >= G.rows || G.grid[y][x])
+        return; G.pos = [x, y]; G.facing = [dx, dy]; let k = id(x, y); if (G.coins.has(k)) {
+        G.coins.delete(k);
+        G.taken++;
+        toast('MONEDA ' + G.taken + '/' + G.total);
+        updateStatus();
+        if (!G.coins.size)
+            setTimeout(() => toast('¡SALIDA ABIERTA!'), 400);
+    } if (id(...G.pos) === id(...G.goal)) {
+        if (G.coins.size)
+            toast('FALTAN ' + G.coins.size + ' MONEDAS');
+        else {
+            G.state = 'victory';
+            showModal('NIVEL COMPLETADO', '¡CIRCUITO SUPERADO!', 'Tiempo: ' + formatTime(G.time), 'SIGUIENTE NIVEL');
+        }
+    } }
+    function formatTime(t) { const secs = Math.floor(t); return String(Math.floor(secs / 60)).padStart(2, '0') + ':' + String(secs % 60).padStart(2, '0'); }
+    function showModal(title, lead, desc, button) { $('garageOptions').classList.add('hidden'); $('panelTitle').textContent = title; $('panelLead').textContent = lead; $('panelText').textContent = desc; $('play').textContent = button; $('overlay').classList.remove('hidden'); }
+    function start() { if (G.state === 'victory') {
+        G.level++;
+        init();
+    } G.state = 'playing'; G.stamp = performance.now(); $('overlay').classList.add('hidden'); }
+    function togglePause() { if (G.state === 'playing') {
+        G.state = 'paused';
+        showModal('PAUSA', 'CARRERA DETENIDA', 'El cronómetro está pausado.', 'CONTINUAR');
+    }
+    else if (G.state === 'paused')
+        start(); }
+
+    // 9. Dibujar circuito, barreras, monedas y vehículo
+    function draw() {
+        const w = 1100, h = 640;
+        ctx.fillStyle = C.grass;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = C.navy;
+        ctx.fillRect(0, 0, w, 0);
+        round(22, 13, 1056, 613, 30, '#f0f0f0');
+        round(29, 20, 1042, 599, 24, C.asphalt);
+        ctx.fillStyle = '#d1d7dc';
+        for (let x = 52; x < 1050; x += 75) {
+            ctx.fillRect(x, 41, 37, 3);
+            ctx.fillRect(x, 590, 37, 3);
+        }
+        const cell = Math.min(28, Math.floor(870 / G.cols), Math.floor(510 / G.rows));
+        const ox = Math.round((w - G.cols * cell) / 2), oy = Math.round((h - G.rows * cell) / 2);
+        ctx.fillStyle = '#242830';
+        ctx.fillRect(ox + 5, oy + 5, G.cols * cell, G.rows * cell);
+        ctx.fillStyle = C.asphalt;
+        ctx.fillRect(ox, oy, G.cols * cell, G.rows * cell);
+        for (let y = 0; y < G.rows; y++)
+            for (let x = 0; x < G.cols; x++) {
+                const px = ox + x * cell, py = oy + y * cell;
+                if (G.grid[y][x] === 0) {
+                    ctx.fillStyle = C.path;
+                    ctx.fillRect(px, py, cell, cell);
+                    continue;
+                }
+                // Barrera continua, bordes rojos/blancos y neumático pixel art modular.
+                ctx.fillStyle = '#19212c';
+                ctx.fillRect(px, py, cell, cell);
+                for (const [dx, dy] of neighbors) {
+                    const nx = x + dx, ny = y + dy;
+                    if (nx >= 0 && ny >= 0 && nx < G.cols && ny < G.rows && G.grid[ny][nx] === 0) {
+                        ctx.fillStyle = ((x + y) & 1) ? '#ef4057' : '#f1f1f1';
+                        if (dx === 1)
+                            ctx.fillRect(px + cell - 3, py, 3, cell);
+                        if (dx === -1)
+                            ctx.fillRect(px, py, 3, cell);
+                        if (dy === 1)
+                            ctx.fillRect(px, py + cell - 3, cell, 3);
+                        if (dy === -1)
+                            ctx.fillRect(px, py, cell, 3);
+                    }
+                }
+                tire(px + 2, py + 2, cell - 4);
+            }
+        if (G.hint) {
+            const dest = G.coins.size ? [...G.coins].map(un).sort((a, b) => pathTo(G.pos, a).length - pathTo(G.pos, b).length)[0] : G.goal;
+            for (const [x, y] of pathTo(G.pos, dest).slice(1, -1)) {
+                ctx.fillStyle = '#57d3ff';
+                ctx.fillRect(ox + x * cell + cell * .39, oy + y * cell + cell * .39, Math.max(4, cell * .23), Math.max(4, cell * .23));
+            }
+        }
+        const [gx, gy] = G.goal;
+        for (let a = 0; a < 6; a++)
+            for (let b = 0; b < 6; b++) {
+                ctx.fillStyle = (a + b) % 2 ? '#111821' : (G.coins.size ? '#999da5' : '#f9f9f9');
+                ctx.fillRect(ox + (gx + b / 6) * cell, oy + (gy + a / 6) * cell, cell / 6 + 1, cell / 6 + 1);
+            }
+        if (G.coins.size) {
+            ctx.fillStyle = '#e53949';
+            ctx.fillRect(ox + gx * cell + cell * .35, oy + gy * cell + cell * .36, cell * .3, cell * .3);
+        }
+        for (const k of G.coins) {
+            const [x, y] = un(k);
+            const cx = ox + (x + .5) * cell, cy = oy + (y + .5) * cell;
+            ctx.fillStyle = '#a26610';
+            ctx.fillRect(cx - cell * .27, cy - cell * .23, cell * .58, cell * .55);
+            ctx.fillStyle = '#ffcb3b';
+            ctx.fillRect(cx - cell * .27, cy - cell * .30, cell * .52, cell * .52);
+            ctx.fillStyle = '#fff4aa';
+            ctx.fillRect(cx - cell * .14, cy - cell * .2, cell * .13, cell * .13);
+        }
+        const [px, py] = G.pos;
+        car(ox + (px + .5) * cell, oy + (py + .5) * cell, cell, G.facing);
+    }
+    function round(x, y, w, h, r, color) { ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill(); }
+    function tire(x, y, s) { const U = s / 16; function pix(c, x, y, w, h) { ctx.fillStyle = c; ctx.fillRect(Math.round(x * U + ox0), Math.round(y * U + oy0), Math.ceil(w * U), Math.ceil(h * U)); } const ox0 = x, oy0 = y; pix('#0b111b', 2, 0, 12, 16); pix('#0b111b', 0, 3, 16, 10); pix('#3c4c65', 3, 2, 10, 12); pix('#647d9c', 4, 3, 8, 3); pix('#192636', 5, 5, 6, 6); pix('#8198ae', 6, 5, 4, 2); pix('#0c1420', 7, 7, 3, 3); pix('#40516a', 8, 8, 1, 1); }
+
+    // 10. Dibujar los vehículos con estilo pixel art
+    function pixelCar(c, model, team) {
+        const [, body, dark, accent] = TEAMS[team], black = '#0d1520', glass = '#243b4b', shine = '#91c2dd';
+        const b = (color, x, y, w, h) => { c.fillStyle = color; c.fillRect(x, y, w, h); };
+        c.clearRect(0, 0, 40, 60);
+        if (model === 3) {
+            b(black, 2, 14, 8, 12);
+            b(black, 30, 14, 8, 12);
+            b(black, 2, 41, 8, 12);
+            b(black, 30, 41, 8, 12);
+            b(black, 13, 2, 14, 5);
+            b(body, 15, 3, 10, 3);
+            b(body, 16, 8, 8, 46);
+            b(dark, 18, 14, 4, 33);
+            b(body, 9, 20, 22, 5);
+            b(body, 8, 41, 24, 5);
+            b(glass, 15, 22, 10, 14);
+            b(shine, 16, 23, 3, 7);
+            b(accent, 18, 9, 4, 7);
+            b(accent, 16, 46, 8, 3);
+            b(black, 3, 54, 34, 5);
+            b(body, 6, 55, 28, 2);
+            return;
+        }
+        const left = model === 1 ? 5 : 7, right = 40 - left;
+        for (const x of [3, 32]) {
+            b(black, x, 15, 5, 11);
+            b(black, x, 38, 5, 11);
+        }
+        c.fillStyle = black;
+        c.beginPath();
+        c.moveTo(13, 2);
+        c.lineTo(27, 2);
+        c.lineTo(right, 10);
+        c.lineTo(right, 49);
+        c.lineTo(28, 57);
+        c.lineTo(12, 57);
+        c.lineTo(left, 49);
+        c.lineTo(left, 10);
+        c.closePath();
+        c.fill();
+        c.fillStyle = body;
+        c.beginPath();
+        c.moveTo(14, 4);
+        c.lineTo(26, 4);
+        c.lineTo(right - 2, 11);
+        c.lineTo(right - 2, 48);
+        c.lineTo(27, 55);
+        c.lineTo(13, 55);
+        c.lineTo(left + 2, 48);
+        c.lineTo(left + 2, 11);
+        c.closePath();
+        c.fill();
+        b(glass, 11, 15, 18, 13);
+        b(shine, 13, 16, 9, 2);
+        b(dark, 11, 29, 18, 4);
+        b(glass, 12, 35, 16, 7);
+        b(dark, 12, 44, 16, 5);
+        b('#fcf6e5', 10, 10, 4, 3);
+        b('#fcf6e5', 26, 10, 4, 3);
+        b(accent, 11, 51, 5, 2);
+        b(accent, 24, 51, 5, 2);
+        if (model === 0) {
+            b(accent, 18, 5, 4, 49);
+            b('#ffffff', 17, 5, 1, 49);
+        }
+        if (model === 1) {
+            b(accent, 14, 5, 3, 49);
+            b(accent, 23, 5, 3, 49);
+            b('#f5f5ee', 18, 5, 4, 49);
+            b(black, 10, 47, 20, 3);
+        }
+        if (model === 2) {
+            b(accent, 17, 5, 6, 49);
+            b('#f5f5ee', 19, 5, 2, 49);
+            b(accent, 10, 20, 2, 18);
+            b(accent, 28, 20, 2, 18);
+        }
+    }
+
+    // 11. Garaje: elegir modelo y escudería
+    function paintGarage() {
+        const host = $('garageCars');
+        host.innerHTML = '';
+        for (let i = 0; i < MODELS.length; i++) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'car-option' + (i === selectedCar ? ' selected' : '');
+            const preview = document.createElement('canvas');
+            preview.width = 40;
+            preview.height = 60;
+            pixelCar(preview.getContext('2d'), i, selectedTeam);
+            button.append(preview, document.createTextNode(MODELS[i]));
+            button.onclick = () => { selectedCar = i; paintGarage(); };
+            host.append(button);
+        }
+        pixelCar($('garagePreview').getContext('2d'), selectedCar, selectedTeam);
+        $('garageTeamName').textContent = TEAMS[selectedTeam][0].toUpperCase();
+    }
+    function changeTeam(step) { selectedTeam = (selectedTeam + step + TEAMS.length) % TEAMS.length; paintGarage(); }
+    $('prevTeam').onclick = () => changeTeam(-1);
+    $('nextTeam').onclick = () => changeTeam(1);
+    function car(x, y, s, dir) { ctx.save(); ctx.translate(x, y); ctx.rotate(dir[0] === 1 ? Math.PI / 2 : dir[0] === -1 ? -Math.PI / 2 : dir[1] === 1 ? Math.PI : 0); const off = document.createElement('canvas'); off.width = 40; off.height = 60; pixelCar(off.getContext('2d'), selectedCar, selectedTeam); const w = s * .7, h = s * 1.05; ctx.imageSmoothingEnabled = false; ctx.drawImage(off, -w / 2, -h / 2, w, h); ctx.restore(); }
+
+    // 12. Bucle de animación y cronómetro
+    function tick(now) { if (G.state === 'playing') {
+        G.time += (now - G.stamp) / 1000;
+    } $('time').textContent = 'TIEMPO ' + formatTime(G.time); G.stamp = now; draw(); requestAnimationFrame(tick); }
+
+    // 13. Eventos de botones y controles
+    $('play').onclick = start;
+    $('hint').onclick = () => { G.hint = !G.hint; $('hint').textContent = 'RUTA: ' + (G.hint ? 'ON' : 'OFF'); };
+    $('pause').onclick = togglePause;
+    $('restart').onclick = () => { init(); G.state = 'playing'; };
+    $('help').onclick = () => $('helpBox').classList.toggle('hidden');
+    $('closeHelp').onclick = () => $('helpBox').classList.add('hidden');
+
+    // 14. Controles de teclado
+    window.addEventListener('keydown', ev => { const k = ev.key.toLowerCase(); const dirs = { arrowup: [0, -1], w: [0, -1], arrowdown: [0, 1], s: [0, 1], arrowleft: [-1, 0], a: [-1, 0], arrowright: [1, 0], d: [1, 0] }; if (dirs[k]) {
+        ev.preventDefault();
+        if (G.state === 'menu') {
+            if (ev.repeat)
+                return;
+            if (k === 'arrowup' || k === 'w')
+                selectedCar = (selectedCar + MODELS.length - 1) % MODELS.length;
+            else if (k === 'arrowdown' || k === 's')
+                selectedCar = (selectedCar + 1) % MODELS.length;
+            else if (k === 'arrowleft' || k === 'a')
+                selectedTeam = (selectedTeam + TEAMS.length - 1) % TEAMS.length;
+            else
+                selectedTeam = (selectedTeam + 1) % TEAMS.length;
+            paintGarage();
+        }
+        else
+            move(...dirs[k]);
+    } if (k === 'enter' || k === ' ') {
+        ev.preventDefault();
+        if (G.state !== 'playing')
+            start();
+    } if (k === 'h')
+        $('hint').click(); if (k === 'p')
+        togglePause(); if (k === 'r')
+        $('restart').click(); });
+
+    // 15. Controles táctiles
+    let hold = null;
+    document.querySelectorAll('[data-dx]').forEach(el => { const act = () => move(Number(el.dataset.dx), Number(el.dataset.dy)); el.addEventListener('pointerdown', ev => { ev.preventDefault(); act(); clearInterval(hold); hold = setInterval(act, 125); el.setPointerCapture(ev.pointerId); }); for (const e of ['pointerup', 'pointercancel', 'lostpointercapture'])
+        el.addEventListener(e, () => { clearInterval(hold); hold = null; }); });
+
+    // 16. Inicialización de la aplicación
+    init();
+    paintGarage();
+    requestAnimationFrame(tick);
+  
+  </script>
+ </body>
+</html>
