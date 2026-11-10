@@ -1,72 +1,189 @@
-# Race Maze
 
-Race Maze es un videojuego desarrollado en Python utilizando la biblioteca Pygame. El proyecto combina la generación de laberintos, el movimiento de vehículos y la implementación de algoritmos de búsqueda para crear un juego basado en la exploración y resolución de caminos.
+<div align="center">
 
-El objetivo principal es recorrer un laberinto, recolectar las monedas disponibles y llegar a la meta para completar cada nivel.
+# 🏎 Race Maze
+### Pixel Circuit
 
-Este proyecto fue desarrollado como una aplicación práctica de los algoritmos de búsqueda **Depth-First Search (DFS)** y **Breadth-First Search (BFS)**.
+**A browser-based maze racing game built with HTML, CSS, and JavaScript.**
 
-## Características
+Navigate procedurally generated mazes, collect coins, customize your car, and reach the finish line.
 
-- Generación aleatoria de laberintos.
-- Sistema de movimiento y control de vehículos.
-- Detección de colisiones con las paredes.
-- Recolección de monedas dentro del laberinto.
-- Sistema de niveles y progreso.
-- Búsqueda de rutas mediante el algoritmo BFS.
-- Generación de caminos mediante el algoritmo DFS.
-- Interfaz gráfica desarrollada con Pygame.
-- Sistema de selección y personalización de vehículos.
+[View Source Code](./index.html) · [Report an Issue](https://github.com/waltdev16/race-maze/issues)
 
-## Algoritmos implementados
+</div>
+
+---
+
+## About the Project
+
+**Race Maze** is an interactive, pixel-art racing game that combines maze exploration, procedural generation, and pathfinding algorithms.
+
+Players navigate through randomly generated circuits, collect coins, and unlock the finish line to advance through increasingly challenging levels.
+
+The project explores the practical implementation of **Depth-First Search (DFS)** and **Breadth-First Search (BFS)** in game development.
+
+## Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| HTML5 | Game structure and interface |
+| CSS3 | Styling and responsive layouts |
+| JavaScript | Game logic and interactions |
+| Canvas 2D API | Rendering vehicles, mazes, and animations |
+| DFS | Procedural maze generation |
+| BFS | Shortest-path calculations |
+
+The game uses vanilla JavaScript without external frameworks or game engines.
+
+## Features
+
+- **Procedural Maze Generation:** Randomly generated circuits using DFS.
+- **Progressive Difficulty:** Increasing maze dimensions and coin objectives.
+- **Vehicle Selection:** Four different car models.
+- **Team Customization:** Twelve racing-team color palettes.
+- **Coin Collection:** Collect all coins to unlock the finish line.
+- **Pathfinding Assistance:** Optional route visualization powered by BFS.
+- **Level Progression:** Advance after completing each circuit.
+- **Timer System:** Track your time while playing.
+- **Pause and Restart:** Control your current session.
+- **Responsive Controls:** Keyboard and touchscreen support.
+- **Pixel-Art Graphics:** Custom vehicles and circuits rendered with Canvas.
+
+## Keyboard Shortcuts
+
+| Action | Shortcut |
+|---|---|
+| Move | Arrow Keys / WASD |
+| Select vehicle | Up / Down (garage) |
+| Change team | Left / Right (garage) |
+| Start / Continue | Enter / Space |
+| Show / Hide Route | H |
+| Pause / Resume | P |
+| Restart Level | R |
+| Browser Fullscreen | F11 |
+
+Touchscreen users can navigate using the on-screen directional controls.
+
+## How It Works
+
+1. Select a vehicle and racing-team color palette.
+2. Start a level to generate a randomized maze.
+3. Navigate through the circuit without crossing walls.
+4. Collect all available coins.
+5. Reach the unlocked finish line.
+6. Advance to the next level.
 
 ### Depth-First Search (DFS)
 
-El algoritmo DFS se utiliza para generar los laberintos del juego.
+The maze generator uses a randomized, stack-based DFS algorithm.
 
-Su funcionamiento consiste en recorrer las celdas de una cuadrícula, seleccionando caminos y eliminando paredes entre las celdas visitadas. Esto permite generar diferentes estructuras de laberintos en cada partida.
+It starts from an initial cell, visits neighboring cells, removes walls to create passages, and backtracks whenever no unvisited neighbors remain.
+
+This process produces interconnected mazes with different layouts.
 
 ### Breadth-First Search (BFS)
 
-El algoritmo BFS se utiliza para encontrar el camino más corto desde una posición inicial hasta un objetivo dentro del laberinto.
+BFS is responsible for finding shortest paths between accessible cells.
 
-A diferencia de DFS, BFS explora las posiciones por niveles, lo que permite encontrar una ruta óptima cuando todos los movimientos tienen el mismo costo.
+The algorithm explores neighboring positions using a queue and reconstructs the route by tracking previously visited cells.
 
-### Comparación
+Because every movement has equal cost, BFS can determine a shortest path through the maze.
 
-| Algoritmo | Función dentro del proyecto |
-|---|---|
-| DFS | Generación de laberintos aleatorios |
-| BFS | Búsqueda del camino más corto |
+## Development Process
 
-## Tecnologías utilizadas
+The development of Race Maze can be divided into five main components.
 
-- **Python:** lenguaje principal de programación.
-- **Pygame:** desarrollo de la interfaz gráfica, movimiento y mecánicas del juego.
-- **Algoritmos de búsqueda:** implementación de DFS y BFS.
-- **Programación orientada a objetos:** organización de los componentes y funcionalidades del proyecto.
+### 1. User Interface
 
-## Funcionamiento
+Creating the game layout, garage, menus, buttons, timer, and visual indicators using HTML and CSS.
 
-Al iniciar una partida, el sistema genera un laberinto utilizando DFS. El jugador debe desplazarse por los caminos disponibles, evitando las paredes y recolectando las monedas distribuidas en el escenario.
+### 2. Maze Generation
 
-Una vez recolectadas todas las monedas, puede dirigirse hacia la salida para completar el nivel.
+Representing the circuit as a two-dimensional grid and implementing DFS to generate randomized pathways.
 
-El juego también incorpora BFS para calcular rutas dentro del laberinto, aplicando conceptos de estructuras de datos y búsqueda en grafos.
+### 3. Game Mechanics
 
-## Objetivo del proyecto
+Implementing vehicle movement, wall collision detection, collectible coins, level progression, and the finish-line system.
 
-El propósito de Race Maze es aplicar conocimientos de programación, estructuras de datos y algoritmos de búsqueda en el desarrollo de un videojuego funcional.
+### 4. Pathfinding
 
-A través de este proyecto se trabajan conceptos como la generación procedural de escenarios, el recorrido de grafos, la detección de colisiones y el desarrollo de interfaces gráficas con Python.
+Using BFS to calculate paths through the maze and provide optional route assistance.
 
-## Estado del proyecto
+### 5. Rendering and Controls
 
-Proyecto académico desarrollado con Python y Pygame, enfocado en la implementación práctica de los algoritmos DFS y BFS.
+Drawing pixel-art elements using HTML Canvas and implementing keyboard and touch interactions.
 
-## Autores
+## What I Learned
+
+Working on this project provided an opportunity to explore and strengthen concepts such as:
+
+- Representing environments using two-dimensional arrays.
+- Understanding graph traversal algorithms.
+- Applying DFS to procedural generation.
+- Using BFS for shortest-path calculations.
+- Managing game states and event-driven interactions.
+- Rendering graphics through the Canvas 2D API.
+- Implementing responsive controls.
+- Organizing and documenting a software project.
+
+## Future Improvements
+
+- [ ] Separate HTML, CSS, and JavaScript into independent files.
+- [ ] Add automated tests for maze generation and pathfinding.
+- [ ] Implement a leaderboard for best completion times.
+- [ ] Save player progress locally.
+- [ ] Introduce additional game modes.
+- [ ] Improve accessibility and mobile controls.
+- [ ] Add sound effects and visual transitions.
+- [ ] Expand gameplay customization.
+
+## Running the Project
+
+### Option 1 — Download
+
+1. Download the repository as a ZIP file.
+2. Extract the downloaded files.
+3. Open `index.html` in a modern web browser.
+4. Select your vehicle and click **INICIAR**.
+
+### Option 2 — Clone the Repository
+
+```bash
+git clone https://github.com/waltdev16/race-maze.git
+cd race-maze
+```
+
+Open `index.html` in your browser.
+
+**Requirements:** A modern web browser with JavaScript and Canvas support.
+
+No additional installation or dependencies are required.
+
+## Gameplay Video
+
+*A gameplay demonstration will be added soon.*
+
+<!-- Replace this section with your video link or thumbnail once available. -->
+
+## Project Structure
+
+```text
+race-maze/
+├── index.html      # Game interface, styles, and logic
+└── README.md       # Project documentation
+```
+
+## Authors
 
 - **Walter Santos**
 - **Patricia Alvarado**
 
 Programa ¡Supérate! Fundación Frech
+
+---
+
+<div align="center">
+
+**Built to explore algorithms, game development, and problem-solving.**
+
+</div>
