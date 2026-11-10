@@ -1,4 +1,3 @@
-
 <div align="center">
 
 # 🏎 Race Maze
@@ -172,6 +171,14 @@ race-maze/
 ├── index.html      # Game interface, styles, and logic
 └── README.md       # Project documentation
 ```
+
+## Gameplay Video
+
+Watch Race Maze in action! This demonstration
+shows the gameplay mechanics, maze navigation,
+vehicle customization, and level progression.
+
+https://github.com/user-attachments/assets/ae5072cc-b6dc-4e1a-8e0b-cbe1063751e5
 
 ## Authors
 
