@@ -21,6 +21,21 @@ Players navigate through randomly generated circuits, collect coins, and unlock 
 
 The project explores the practical implementation of **Depth-First Search (DFS)** and **Breadth-First Search (BFS)** in game development.
 
+## Project Goals
+
+The main goal of Race Maze is to explore how
+graph algorithms can be applied to interactive
+game development.
+
+The project focuses on:
+
+- Implementing DFS for procedural maze generation.
+- Applying BFS to calculate shortest paths.
+- Developing interactive mechanics with JavaScript.
+- Creating pixel-art graphics using HTML Canvas.
+- Improving problem-solving and programming skills.
+- Building a responsive browser-based experience.
+
 ## Technologies Used
 
 | Technology | Purpose |
