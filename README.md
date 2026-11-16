@@ -205,8 +205,8 @@ https://github.com/user-attachments/assets/ae5072cc-b6dc-4e1a-8e0b-cbe1063751e5
 
 ## Authors
 
-- **Walter Santos**
-- **Patricia Alvarado**
+- Author: **Walter Santos**
+- Co-authored-by: **Patricia Alvarado**
 
 Programa ¡Supérate! Fundación Frech
 
