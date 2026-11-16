@@ -27,7 +27,7 @@ The main goal of Race Maze is to explore how
 graph algorithms can be applied to interactive
 game development.
 
-The project focuses on:
+**The project focuses on:**
 
 - Implementing DFS for procedural maze generation.
 - Applying BFS to calculate shortest paths.
